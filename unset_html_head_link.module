@@ -1,0 +1,82 @@
+<?php
+
+/**
+* Implements hook_entity_view_alter().
+*/
+function unset_html_head_link_entity_view_alter(array &$build, Drupal\Core\Entity\EntityInterface $entity, \Drupal\Core\Entity\Display\EntityViewDisplayInterface $display) {
+
+    # checking view_mode for node
+    if ($build['#view_mode'] === 'full' && $entity Instanceof \Drupal\node\NodeInterface) {
+
+        # checking html_head_link on attached tags in head
+        if (!isset($build['#attached']['html_head_link'])) return;
+
+        # array to unset
+        $unset_html_head_link = [
+            'delete-form',
+            'edit-form',
+            'version-history',
+            'revision',
+            'canonical',
+            'shortlink'
+        ];
+
+        # loop to unset the desired fields
+        foreach ($build['#attached']['html_head_link'] as $key => $value) {
+            if (isset($value[0]['rel']) && in_array($value[0]['rel'], $unset_html_head_link)) {
+                # this gets rid of the fields in $unset_html_head_link
+                unset($build['#attached']['html_head_link'][$key]);
+            }
+        }
+
+    } #if
+
+}
+
+
+/**
+ * TODO: what is the purpose of this function? the other function removes the fields in the node view.
+ * Implements hook_page_attachments_alter().
+ *
+ * Use this hook when you want to remove or alter attachments on the page, 
+ * or add attachments to the page that depend on another module's attachments 
+ * (this hook runs after hook_page_attachments().
+ * 
+ */
+function unset_html_head_link_page_attachments_alter(array &$attachments) {
+
+    # array to unset
+    $head_link_fields_to_remove = [
+        'referrer', 
+        'MobileOptimized', 
+        'HandheldFriendly', 
+        'system_meta_generator'
+    ];
+  
+    # loop to unset the desired fields
+    foreach ($attachments['#attached']['html_head'] as $key => $value) {        
+        foreach ($attachments['#attached']['html_head'][$key] as $k => $v) {
+            if (in_array($v, $head_link_fields_to_remove)) {
+                unset($attachments['#attached']['html_head'][$key]);
+            }
+        }
+    }
+
+}
+
+
+/**
+ * Implements hook_module_implements_alter().
+ */
+function unset_html_head_link_module_implements_alter(&$implementations, $hook) {
+    if ($hook === 'page_attachments_alter') {
+        $group = $implementations['unset_html_head_link'];
+        unset($implementations['unset_html_head_link']);
+        $implementations['unset_html_head_link'] = $group;
+    }
+}
+
+
+
+
+
