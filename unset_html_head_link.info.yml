@@ -1,10 +1,10 @@
-# Module name.
 name: Unset HTML head link
-# Module description.
-description: 'Module to unset bad HTML link tags (rel="delete-form", rel="edit-form", etc.) from head in Drupal 8.x sites.'
-# Module dev info.
-core: 8.1.x
+description: Module to unset bad HTML link tags (rel="delete-form", rel="edit-form", etc.) from head in Drupal 8.x sites.
+core: 8.x
 type: module
 package: SEO
-# Module version.
-version: 0.1
+version: 8.x-1.0-beta1
+
+
+
+
